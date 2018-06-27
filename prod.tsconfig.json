@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "allowUnreachableCode": true,
+        "alwaysStrict": true,
+        "module": "commonjs",
+        "outDir": "lib",
+        "removeComments": true,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "resolveJsonModule": true,
+        "strictFunctionTypes": true,
+        "strictPropertyInitialization": true,
+        "strictNullChecks": true,
+        "target": "es2015",
+        "lib": [
+            "es2015"
+        ],
+        "experimentalDecorators": true
+    },
+
+    "include": [
+        "src"
+    ],
+
+    "exclude": [
+        "node_modules"
+    ]
+}
