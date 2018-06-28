@@ -1,0 +1,8 @@
+#Ignore all files.
+*
+/*
+#Whitelisted files and directories.
+!README.md
+!LICENSE.md
+!/lib**/*
+!/bin/**/*
