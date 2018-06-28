@@ -71,7 +71,7 @@ export function validateConfigureString(
 export function getConfigurationPath(): string {
   switch (process.platform) {
     case "win32":
-      return os.homedir() + "\\AppData\\Local\\rdnsu";
+      return path.join(process.env.APPDATA || "./", "rdnsu");
     default:
       return "/etc/rdnsu/";
   }

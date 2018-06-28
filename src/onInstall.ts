@@ -1,54 +1,36 @@
-import fs = require("fs");
+import fs = require("fs-extra");
 import path = require("path");
 import { getConfigurationPath } from "./util";
 
-const configOutput: string = JSON.stringify({
+const mustHaveConfigurationProperties = {
   remote_hostname: "HOSTNAME",
   path: "PATH",
   user: "USER",
   password: "PASSWORD",
   dns_record: "YOUR HOSTNAME"
-});
+};
 
-//Config directory and
-try {
-  try {
-    fs.mkdirSync(getConfigurationPath(), 0o660);
-  } catch (err) {
-    if (err.code !== "EEXSIT") {
-      throw err;
-    }
-  }
-  let fd = fs.openSync(
-    path.join(getConfigurationPath(), "config.cfg"),
-    fs.constants.O_CREAT | fs.constants.O_WRONLY | fs.constants.O_EXCL,
-    0o660
+let configPathToCreate: string = path.join(getConfigurationPath(), "logs");
+console.log(
+  `Creating RDNSU configuration folder structure at: "${configPathToCreate}"`
+);
+
+let doseConfgiurationPathExist: string = process.env.APPDATA || "/etc/";
+if (!fs.pathExistsSync(doseConfgiurationPathExist)) {
+  console.error(
+    "Could not find the system configuration path. See documentation for more information."
   );
-  fs.writeSync(fd, configOutput);
-  fs.closeSync(fd);
-} catch (err) {
-  if (err.code !== "EEXIST") {
-    throw err;
-  }
+  process.exit(0);
 }
 
 try {
-  let logPath: string = path.join(getConfigurationPath(), "log");
-  try {
-    fs.mkdirSync(logPath, 0o660);
-  } catch (err) {
-    if (err.code !== "EEXSIT") {
-      throw err;
-    }
-  }
-  let fd = fs.openSync(
-    path.join(logPath, "rdnsu.log"),
-    fs.constants.O_CREAT | fs.constants.O_WRONLY | fs.constants.O_EXCL,
-    0o660
+  fs.ensureDirSync(configPathToCreate);
+  fs.writeJsonSync(
+    path.join(getConfigurationPath(), "config.json"),
+    mustHaveConfigurationProperties
   );
-  fs.closeSync(fd);
 } catch (err) {
-  if (err.code !== "EEXIST") {
-    throw err;
-  }
+  console.error(
+    "Failed to create configuration folders. See documentation for more information."
+  );
 }
