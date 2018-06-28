@@ -1,8 +1,8 @@
-.gitignore
-src
-README.md
-tsconfig.json
-prod.tsconfig.json
-test
-gulpfile.js
-config.cfg
+#Ignore all files.
+*
+/*
+#Whitelisted files and directories.
+!README.md
+!LICENSE.md
+!/lib**/*
+!/bin/**/*

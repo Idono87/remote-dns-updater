@@ -46,7 +46,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Idono87/dns-remote-updater.git"
+    "url": "git+https://github.com/Idono87/remote-dns-updater.git"
   },
   "keywords": [
     "DDNS",
