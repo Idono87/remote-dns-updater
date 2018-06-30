@@ -12,3 +12,5 @@
 !.npmignore
 !src/**/*
 !bin_src/**/*
+!.circleci/**/*
+!test/**/*
