@@ -1,7 +1,7 @@
-import { ArgumentError, ConfigPropertyError } from "./errors";
-import os = require("os");
-import fs = require("fs");
-import path = require("path");
+import { ArgumentError, ConfigPropertyError } from './errors';
+import os = require('os');
+import fs = require('fs');
+import path = require('path');
 
 /**
  * Returns the available choices from enumeration.
@@ -10,16 +10,16 @@ import path = require("path");
  * @returns An array containing the choices.
  */
 export function buildChoicesFromEnum(enumeration: any): string[] {
-  return Object.keys(enumeration).reduce(
-    (accumelator: string[], val: string): string[] => {
-      if (isNaN(parseInt(val))) {
-        accumelator.push(val);
-      }
+    return Object.keys(enumeration).reduce(
+        (accumelator: string[], val: string): string[] => {
+            if (isNaN(parseInt(val))) {
+                accumelator.push(val);
+            }
 
-      return accumelator;
-    },
-    new Array()
-  );
+            return accumelator;
+        },
+        new Array(),
+    );
 }
 
 /**
@@ -29,9 +29,9 @@ export function buildChoicesFromEnum(enumeration: any): string[] {
  * @returns function - Returns the coercion callback function to be used with yargs.
  */
 export function coerceToEnum(enumeration: any): (arg: any) => any {
-  return function(arg: any): any {
-    return arg in enumeration ? enumeration[arg] : arg;
-  };
+    return function(arg: any): any {
+        return arg in enumeration ? enumeration[arg] : arg;
+    };
 }
 
 /**
@@ -42,13 +42,13 @@ export function coerceToEnum(enumeration: any): (arg: any) => any {
  * @throws ArgumentError - If validation fails.
  */
 export function validateArgumentString(
-  regex: RegExp,
-  property: string
+    regex: RegExp,
+    property: string,
 ): (str: string) => string {
-  return function(str: string): string {
-    if (!regex.test(str)) throw new ArgumentError(true, property, str);
-    return str;
-  };
+    return function(str: string): string {
+        if (!regex.test(str)) throw new ArgumentError(true, property, str);
+        return str;
+    };
 }
 
 /**
@@ -59,20 +59,21 @@ export function validateArgumentString(
  * @throws ConfigPropertyError - If validation fails.
  */
 export function validateConfigureString(
-  regex: RegExp,
-  property: string
+    regex: RegExp,
+    property: string,
 ): (str: string) => string {
-  return function(str: string): string {
-    if (!regex.test(str)) throw new ConfigPropertyError(true, property, str);
-    return str;
-  };
+    return function(str: string): string {
+        if (!regex.test(str))
+            throw new ConfigPropertyError(true, property, str);
+        return str;
+    };
 }
 
 export function getConfigurationPath(): string {
-  switch (process.platform) {
-    case "win32":
-      return os.homedir() + "\\AppData\\Local\\rdnsu";
-    default:
-      return "/etc/rdnsu/";
-  }
+    switch (process.platform) {
+        /* case 'win32':
+            return path.join(process.env.APPDATA || './', 'rdnsu'); */
+        default:
+            return '/etc/rdnsu/';
+    }
 }

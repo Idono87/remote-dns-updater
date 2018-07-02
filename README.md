@@ -14,6 +14,14 @@ The package is a complete application and can not be used as a module. There for
 npm install -g remote-dns-updater
 ```
 
+## Post-Install script
+
+During installation a post install script will be executed to create the application configuration folder, log folders and a bare minimum configuration file. Depending on how npm is installed on the system. The package might have to be installed with the `--unsafe-perm` argument or the script has to be run manually.
+
+```
+npm install -g remote-dns-updater --unsafe-perm
+```
+
 # Usage
 
 To start the application simply run the the binary `rdnsu`. This will start the application attached to the command line. It is recommended to start this way while configuring the application.
@@ -25,7 +33,6 @@ The following commands can later be use to `start`, `stop` and `restart` RDNSU i
 The application can be configured through the CL or by editing the configuration file that's been created in:
 
 - `/etc/rdnsu/` for linux like systems.
-- `APPDATA\rdnsu\` for Windows systems.
 
 ### Command Line Configuration
 

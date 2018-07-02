@@ -1,0 +1,42 @@
+version: 2
+jobs:
+  build: 
+    docker:
+      - image: node:8.11.3
+    
+    steps:
+      - checkout
+        
+      - restore_cache:
+          key: v1-rdnsu-cache-{{ .Branch }}
+        
+      - run:
+          command: npm install --ignore-scripts
+
+      - run: 
+          command: ./node_modules/.bin/gulp
+        
+      - run: mkdir ~/junit   
+      
+      - run:
+          command: npm test
+          environment:
+            MOCHA_FILE: ./test-results/junit/test-results.xml
+
+      - store_test_results:
+          path: ./test-results
+
+      - store_artifacts:
+          path: ./coverage
+          destination: /results/coverage
+
+      - store_artifacts:
+          path: ./test-results
+          destination: /results
+              
+      - save_cache:
+          key: v1-rdnsu-cache-{{ .Branch }}
+          paths: node_modules
+                
+                
+                
