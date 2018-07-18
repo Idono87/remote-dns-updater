@@ -76,6 +76,23 @@ describe('Scripts', function() {
                 fsMock.restore();
             });
 
+            it(`config path does not exist`, function() {
+                let fsMock: sinon.SinonMock = sinon.mock(fs);
+                delete process.env.APPDATA;
+                fsMock
+                    .expects('pathExistsSync')
+                    .once()
+                    .returns(false);
+
+                expect(install).to.throw(
+                    'Could not find the system configuration path. See documentation for more information.',
+                );
+
+                fsMock.verify();
+
+                fsMock.restore();
+            });
+
             it(`file creation exception thrown`, function() {
                 let fsMock: sinon.SinonMock = sinon.mock(fs);
 

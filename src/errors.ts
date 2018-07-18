@@ -42,6 +42,12 @@ export class ConfigMissingPropertyError extends Error {
     }
 }
 
+export class SaveError extends Error {
+    public constructor() {
+        super('Could not save configuration.');
+    }
+}
+
 export class InternalError extends Error {
     public constructor(msg: string) {
         super(msg);

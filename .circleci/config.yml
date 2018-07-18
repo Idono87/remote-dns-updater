@@ -12,9 +12,6 @@ jobs:
         
       - run:
           command: npm install --ignore-scripts
-
-      - run: 
-          command: ./node_modules/.bin/gulp
         
       - run: mkdir ~/junit   
       

@@ -8,7 +8,7 @@ import ConfigurationObject from './configurationObject';
 
 const LogMessages: { [key: string]: string } = {
     911: "There's a problem with the DNS server.",
-    dnserr: 'DNS error encountered.',
+    dnserr: 'DNS error encountered',
     badagent:
         'User agent not permitted or HTTP method is not permitted. Updates have been suspended.',
     abuse:
@@ -46,8 +46,8 @@ export default class RemoteUpdater {
         this.m_sDnsRecord = <string>conf.dns_record;
         this.m_protocol = <Protocols>conf.protocol;
         this.m_publicIpOptions = { https: false };
-        this.m_nMaxSuspendedUpdateCount = <number>conf.suspension_count;
-        this.m_bRemindUserOfSuspension = <boolean>conf.suspension;
+        this.m_nMaxSuspendedUpdateCount = <number>conf.remind_count;
+        this.m_bRemindUserOfSuspension = <boolean>conf.remind;
         this.m_sCurrentIp = '';
         this.m_bSuspended = false;
         this.m_nSuspendedUpdateCount = 0;
@@ -64,7 +64,7 @@ export default class RemoteUpdater {
 
             if (
                 this.m_bRemindUserOfSuspension &&
-                this.m_nSuspendedUpdateCount <= this.m_nMaxSuspendedUpdateCount
+                this.m_nSuspendedUpdateCount >= this.m_nMaxSuspendedUpdateCount
             ) {
                 winston.warn(LogMessages.suspendedUpdate);
                 this.m_nSuspendedUpdateCount = 0;
@@ -80,12 +80,13 @@ export default class RemoteUpdater {
 
             if (sNewIp === this.m_sCurrentIp) {
                 winston.info('DNS is up to date.');
+                return;
             }
 
             response = await this.sendRequest(sNewIp);
         } catch (err) {
             /* debug */
-            winston.error(err);
+            winston.debug(err);
             /* debug-end */
 
             if (err.message === 'Query timed out') {
