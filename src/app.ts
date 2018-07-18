@@ -2,6 +2,7 @@ import winston = require('winston');
 import Configuration from './init';
 import RemoteUpdater from './remoteUpdater';
 import InstanceLocker = require('instance-locker');
+import ConfigurationObject from './configurationObject';
 
 const instanceLock: InstanceLocker.LockerAsync = InstanceLocker(
     <string>process.env.LOCK_NAME,
@@ -17,9 +18,12 @@ let interval: NodeJS.Timer;
         exit(0);
     }
 
-    let nIntervalMin = <number>Configuration.update_interval * 1000 * 60;
+    let nIntervalMin =
+        <number>(<ConfigurationObject>Configuration).update_interval *
+        1000 *
+        60;
 
-    updater = new RemoteUpdater(Configuration);
+    updater = new RemoteUpdater(<ConfigurationObject>Configuration);
     interval = setInterval(update, nIntervalMin);
     await update();
 
@@ -55,8 +59,7 @@ process.on('SIGHUP', () => {
     exit(0);
 });
 
-/* process.on('uncaughtException', (err) => 
-{
+process.on('uncaughtException', (err) => {
     winston.error(err.message);
     kill(0);
-}); */
+});
