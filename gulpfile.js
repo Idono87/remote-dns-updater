@@ -6,6 +6,9 @@ const stripCode = require('gulp-strip-code');
 const del = require('del');
 const gulpif = require('gulp-if');
 const gulpSeq = require('run-sequence');
+const istanbul = require('gulp-istanbul');
+const mocha = require('gulp-mocha');
+const { exec } = require('child_process');
 
 if (yargs.production) {
     process.env.NODE_ENV = 'production';
@@ -66,6 +69,18 @@ gulp.task('build-prod', function() {
 
 gulp.task('clean', function() {
     return del(compileconfig.dest);
+});
+
+gulp.task('test', function() {
+    let childProcess = exec('npm test', {}, (err, stdout, stderr) => {
+        if (typeof error != 'undefined') {
+            console.error(error);
+            return;
+        }
+
+        process.stdout.write(stdout);
+        process.stderr.write(stderr);
+    });
 });
 
 gulp.task('default', ['build']);
