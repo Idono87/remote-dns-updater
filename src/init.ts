@@ -347,7 +347,7 @@ if (
   areRequiredPropertiesSet(configuration);
   configuration = addMissingProperties(configuration);
   configuration = freezeConfiguration(configuration);
-  initWinstonLogger;
+  initWinstonLogger(configuration);
   Configuration = configuration;
 }
 
