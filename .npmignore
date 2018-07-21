@@ -4,5 +4,5 @@
 #Whitelisted files and directories.
 !README.md
 !LICENSE.md
-!/lib**/*
+!/lib/**/*
 !/bin/**/*
