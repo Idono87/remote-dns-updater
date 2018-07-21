@@ -2,5 +2,6 @@
 --require source-map-support/register
 --require mocha-steps
 --recursive
---reporter mocha-junit-reporter
+# --reporter mocha-junit-reporter
+--reporter spec
 test/**/*.ts
