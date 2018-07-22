@@ -14,3 +14,5 @@
 !bin_src/**/*
 !.circleci/**/*
 !test/**/*
+!GitVersion.yml
+!.prettierrc.yml

@@ -5,17 +5,19 @@ import InstanceLocker = require("instance-locker");
 import ConfigurationObject from "./configurationObject";
 
 const instanceLock: InstanceLocker.LockerAsync = InstanceLocker(
-  <string>process.env.LOCK_NAME,
+  "Remote DNS Updater",
   false,
   true
 );
+
 let updater: RemoteUpdater;
 let interval: NodeJS.Timer;
 
 async function run(): Promise<void> {
-  if (!instanceLock.Lock()) {
+  if (!(await instanceLock.Lock())) {
     winston.info("Application is already running");
-    exit(0);
+    kill(0);
+    return;
   }
 
   let nIntervalMin =

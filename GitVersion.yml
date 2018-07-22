@@ -1,0 +1,7 @@
+mode: ContinuousDelivery
+next-version: 0.0.6
+increment: Inherit
+branches: {}
+tag-prefix: '[vV]'
+ignore:
+  sha: []

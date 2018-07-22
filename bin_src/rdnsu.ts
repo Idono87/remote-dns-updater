@@ -49,10 +49,9 @@ yargs.command("$0", "Default Start in verbose", {}, defaultStart);
 /////////////////////////////////////////////////////////////
 //// Commands
 /////////////////////////////////////////////////////////////
-process.env.LOCK_NAME = "Remote DNS Updater";
 
 const instanceLock: InstanceLocker.LockerAsync = InstanceLocker(
-  process.env.LOCK_NAME,
+  "Remote DNS Updater",
   false,
   true
 );
@@ -65,6 +64,7 @@ async function start(): Promise<void> {
       process.kill(pid, 0);
       winston.info("Remote DNS Updater is already running.");
       exit(0);
+      return;
     }
   } catch (err) {
     if (err.code !== "ESRCH") {
@@ -74,20 +74,16 @@ async function start(): Promise<void> {
     }
   }
 
-  const env = {
-    LOCK_NAME: process.env.LOCK_NAME
-  };
-
   const options = {
-    cwd: process.cwd(),
+    cwd: path.join(__dirname, ".."),
     stdio: "ignore",
-    env: env,
+    env: process.env,
     detached: true
   };
 
   let subProcess: ChildProcess = spawn(
     "node",
-    ["../lib/app.js", ...process.argv.slice(2)],
+    ["./lib/app.js", ...process.argv.slice(2)],
     options
   );
 
@@ -99,19 +95,23 @@ async function start(): Promise<void> {
   subProcess.unref();
 
   let hasStartedCount: number = 0;
-  setInterval(async () => {
+  let interval: NodeJS.Timer = setInterval(async () => {
     pid = await instanceLock.GetOwnerPID();
     try {
       if (pid !== -1) {
         process.kill(pid, 0);
         winston.info("Application has started successfully.");
+        clearInterval(interval);
         exit(0);
         return;
       }
     } catch (err) {}
+
     hasStartedCount++;
     if (hasStartedCount >= 10) {
       winston.info("Could not start application.");
+      clearInterval(interval);
+      exit(0);
     }
   }, 500);
 }
@@ -170,15 +170,10 @@ async function stop(): Promise<boolean> {
 }
 
 async function defaultStart(): Promise<void> {
-  const env = {
-    STARTED_FROM: process.env.STARTED_FROM,
-    LOCK_NAME: process.env.LOCK_NAME
-  };
-
   const options = {
     cwd: path.join(__dirname, ".."),
     stdio: "inherit",
-    env: env,
+    env: process.env,
     detached: false
   };
 
@@ -190,7 +185,7 @@ async function defaultStart(): Promise<void> {
 }
 
 function exit(code: number): void {
-  process.kill(code);
+  process.exitCode = code;
 }
 
 let args: any = yargs.parse();
